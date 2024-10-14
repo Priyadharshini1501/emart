@@ -9,6 +9,7 @@ const ProductDetail = () => {
   const token = localStorage.getItem("token");
   const { id } = useParams();
   const [cart, setCart] = useState(null);
+  // eslint-disable-next-line
   const [cartVersion, setCartVersion] = useState(1);
   const [quantity, setQuantity] = useState(1);
 

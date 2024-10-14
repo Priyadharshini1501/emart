@@ -191,7 +191,7 @@ export const placeOrder = async (cartId, shippingDetails, cartVersion) => {
 export const getOrders = async () => {
   try {
     const response = await client.execute({
-      uri: `/priya-test/me/orders`,  // 'me' allows you to fetch orders for the current authenticated user
+      uri: `/priya-test/orders`,  // 'me' allows you to fetch orders for the current authenticated user
       method: "GET",
       headers: {
         Authorization: `Bearer ${TOKEN}`,

@@ -22,6 +22,7 @@ const Cart = () => {
       };
   
       fetchCart();
+      // eslint-disable-next-line
   }, []);
 
   // Render a loading message while the cart is being fetched

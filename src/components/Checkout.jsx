@@ -78,6 +78,7 @@ const Checkout = () => {
     if(shippingDetails) {
         validateForm();
     }
+    // eslint-disable-next-line
   }, [shippingDetails]);
 
   // Handle order placement
