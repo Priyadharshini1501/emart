@@ -1,4 +1,3 @@
-// src/components/Checkout.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { createCart, addItemToCart, getCart, setCartShippingAddress, placeOrder } from "../services/cartService";
@@ -21,14 +20,13 @@ const Checkout = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  // Fetch cart details when component mounts
   useEffect(() => {
     const fetchCart = async () => {
       try {
         const cartData = await getCart(cartId);
         if (cartData) {
           setCart(cartData);
-          setCartVersion(cartData.version); // Set the cart version
+          setCartVersion(cartData.version);
           const total = cartData.lineItems.reduce((acc, item) => acc + item.totalPrice.centAmount / 100, 0);
           setOrderTotal(total);
         }
@@ -40,7 +38,6 @@ const Checkout = () => {
     fetchCart();
   }, [cartId]);
 
-  // Handle input change for shipping details
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setShippingDetails((prevDetails) => ({
@@ -81,35 +78,29 @@ const Checkout = () => {
     // eslint-disable-next-line
   }, [shippingDetails]);
 
-  // Handle order placement
   const handlePlaceOrder = async () => {
     try {
-        // Retrieve the cart again to check its status
         const fetchedCart = await getCart(cartId);
     
         if (fetchedCart && fetchedCart.cartState !== "Active") {
-          // If the cart is not active, create a new one
           console.log("Cart is not active. Creating a new cart...");
           const newCart = await createCart("USD");
     
           if (newCart && newCart.id) {
-            setCart(newCart); // Update the cart state
+            setCart(newCart); 
             setCartVersion(newCart.version);
             localStorage.setItem("cartId", newCart.id);
     
-            // Transfer items to the new cart if needed
             for (const item of fetchedCart.lineItems) {
               await addItemToCart(newCart.id, item.sku, item.quantity);
             }
     
-            // Set the shipping address for the new cart
             const updatedNewCart = await setCartShippingAddress(
               newCart.id,
               shippingDetails,
               newCart.version
             );
     
-            // Now place the order with the new cart ID and version
             const order = await placeOrder(newCart.id, shippingDetails, updatedNewCart.version);
             if (order) {
               console.log("Order placed successfully:", order);
@@ -121,13 +112,10 @@ const Checkout = () => {
             console.error("Failed to create a new cart.");
           }
         }
-    
-        // If the cart is still active, proceed with the existing cart
+
         const updatedCart = await setCartShippingAddress(cartId, shippingDetails, cartVersion);
         if (updatedCart) {
           console.log("Shipping address set successfully on cart:", updatedCart);
-    
-          // Place the order with the updated cart version
           const order = await placeOrder(cartId, shippingDetails, updatedCart.version);
           if (order) {
             console.log("Order placed successfully:", order);
@@ -147,7 +135,6 @@ const Checkout = () => {
   return (
     <div className="container my-5">
       <h2 className="mb-4">Checkout</h2>
-      {/* Cart Summary */}
       <div className="mb-5">
         <h3>Your Cart</h3>
         <ul className="list-group">
@@ -161,7 +148,6 @@ const Checkout = () => {
         <h4 className="mt-3">Total: ${orderTotal}</h4>
       </div>
 
-      {/* Shipping Information */}
       <div className="mb-5">
         <h3>Shipping Information</h3>
         <form>
@@ -192,7 +178,6 @@ const Checkout = () => {
         </form>
       </div>
 
-      {/* Place Order Button */}
       <button
         onClick={handlePlaceOrder}
         className="btn btn-primary"

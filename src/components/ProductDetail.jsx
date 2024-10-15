@@ -26,14 +26,11 @@ const ProductDetail = () => {
             }
           );
 
-          // Ensure the response is OK
           if (!response.ok) {
             throw new Error("Failed to fetch product");
           }
 
           const data = await response.json();
-
-          // Check if data is not empty or undefined
           if (data) {
             setProduct(data);
           } else {
@@ -80,7 +77,7 @@ const ProductDetail = () => {
         quantity
       );
       if (updatedCart) {
-        setCartVersion(updatedCart.version); // Update version after adding item
+        setCartVersion(updatedCart.version); 
         setCartBtn("Remove from Cart");
         console.log("Cart updated successfully:", updatedCart);
       }
@@ -91,10 +88,9 @@ const ProductDetail = () => {
 
   const handleQuantityChange = (event) => {
     const value = parseInt(event.target.value);
-    setQuantity(isNaN(value) ? 1 : value); // Ensure quantity is a number
+    setQuantity(isNaN(value) ? 1 : value); 
   };
 
-  // Return a loader or a message if product data is not loaded yet
   if (!product) {
     return <div>Loading product details...</div>;
   }
@@ -104,7 +100,6 @@ const ProductDetail = () => {
       <div className="container my-5 py-3">
         <div className="row">
           <div className="col-md-6 d-flex justify-content-center mx-auto product">
-            {/* Make sure to use product fields correctly */}
             <img
               src={
                 product.masterData.current.masterVariant &&

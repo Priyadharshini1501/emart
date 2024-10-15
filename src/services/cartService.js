@@ -11,7 +11,6 @@ const PROJECT_KEY = "priya-test";
 const API_URL = "https://api.eastus.azure.commercetools.com";
 const AUTH_URL = "https://auth.eastus.azure.commercetools.com";
 
-// Create a client instance
 const client = createClient({
   middlewares: [
     createAuthMiddlewareForClientCredentialsFlow({
@@ -26,9 +25,9 @@ const client = createClient({
     createHttpMiddleware({ host: API_URL, fetch }),
   ],
 });
+
 export const getProductBySku = async (sku) => {
   try {
-    // Use product projections to get the product by SKU
     const response = await client.execute({
       uri: `/priya-test/product-projections?where=masterVariant(sku="${sku}")`,
       method: "GET",
@@ -38,7 +37,7 @@ export const getProductBySku = async (sku) => {
     });
 
     if (response && response.body && response.body.results.length > 0) {
-      return response.body.results[0]; // Return the first product found
+      return response.body.results[0]; 
     } else {
       throw new Error(`No product found with SKU: ${sku}`);
     }
@@ -47,7 +46,7 @@ export const getProductBySku = async (sku) => {
     throw error;
   }
 };
-// Create Cart
+
 export const createCart = async (currency) => {
   try {
     const response = await client.execute({
@@ -70,7 +69,6 @@ export const createCart = async (currency) => {
 
 export const addItemToCart = async (cartId, sku, quantity) => {
   try {
-    // Only use the SKU, not the productId, in the API call
     const response = await client.execute({
       uri: `/priya-test/carts/${cartId}`,
       method: "POST",
@@ -79,11 +77,11 @@ export const addItemToCart = async (cartId, sku, quantity) => {
         Authorization: `Bearer ${TOKEN}`,
       },
       body: {
-        version: 1, // Replace with the correct cart version
+        version: 1, 
         actions: [
           {
             action: "addLineItem",
-            sku, // Use only SKU, not productId
+            sku, 
             quantity,
           },
         ],
@@ -101,14 +99,14 @@ export const addItemToCart = async (cartId, sku, quantity) => {
 export const getCart = async (cartId) => {
   try {
     const response = await apiclient.execute({
-      uri: `/priya-test/carts/${cartId}`,  // Replace 'my-project-key' with your actual project key
+      uri: `/priya-test/carts/${cartId}`,  
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,  // Ensure token is retrieved properly
+        Authorization: `Bearer ${TOKEN}`, 
       },
     });
 
-    return response.body;  // Return the cart details
+    return response.body;  
   } catch (error) {
     console.error('Error fetching cart:', error);
     throw error;
@@ -122,7 +120,7 @@ export const setCartShippingAddress = async (cartId, shippingDetails, cartVersio
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${TOKEN}`,
       },
       body: JSON.stringify({
         version: cartVersion,
@@ -160,22 +158,22 @@ export const placeOrder = async (cartId, shippingDetails, cartVersion) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${TOKEN}`,
       },
       body: JSON.stringify({
         cart: { id: cartId },
-        version: cartVersion, // Use the latest version number
-        orderNumber: `${Date.now()}`, // Generate a unique order number
+        version: cartVersion, 
+        orderNumber: `${Date.now()}`, 
         shippingAddress: {
-          firstName: shippingDetails.name.split(" ")[0] || "", // First name from 'name' field
-          lastName: shippingDetails.name.split(" ")[1] || "", // Last name from 'name' field
-          streetName: shippingDetails.address, // Street address
-          city: shippingDetails.city, // City
-          state: shippingDetails.state, // State or region
-          postalCode: shippingDetails.postalCode, // Postal code
-          country: shippingDetails.country.slice(0, 2).toUpperCase(), // Country in ISO format (e.g., "US")
-          email: shippingDetails.email, // Email address
-          phone: shippingDetails.phone, // Phone number
+          firstName: shippingDetails.name.split(" ")[0] || "", 
+          lastName: shippingDetails.name.split(" ")[1] || "", 
+          streetName: shippingDetails.address, 
+          city: shippingDetails.city, 
+          state: shippingDetails.state, 
+          postalCode: shippingDetails.postalCode, 
+          country: shippingDetails.country.slice(0, 2).toUpperCase(), 
+          email: shippingDetails.email, 
+          phone: shippingDetails.phone, 
         },
       }),
     });
@@ -187,20 +185,36 @@ export const placeOrder = async (cartId, shippingDetails, cartVersion) => {
   }
 };
 
-// Fetch all orders for the current user
 export const getOrders = async () => {
   try {
     const response = await client.execute({
-      uri: `/priya-test/orders`,  // 'me' allows you to fetch orders for the current authenticated user
+      uri: `/priya-test/orders`,  
       method: "GET",
       headers: {
         Authorization: `Bearer ${TOKEN}`,
       },
     });
 
-    return response.body.results;  // Return the array of orders
+    return response.body.results;  
   } catch (error) {
     console.error("Failed to fetch orders:", error);
+    throw error;
+  }
+};
+
+export const getOrderDetails = async (orderId) => {
+  try {
+    const response = await apiclient.execute({
+      uri: `/priya-test/orders/${orderId}`,  
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
+
+    return response.body;  
+  } catch (error) {
+    console.error('Error fetching order details:', error);
     throw error;
   }
 };

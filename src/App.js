@@ -1,6 +1,6 @@
 import './App.css';
 import Header from './components/Header';
-import Footer from './components/Footer';
+// import Footer from './components/Footer';
 import Home from './components/Home';
 import About from './components/About';
 import Product from './components/Product';
@@ -12,6 +12,7 @@ import Checkout from './components/Checkout';
 import Login from './components/buttons/Login';
 import OrderConfirmation from './components/OrderConfirmation';
 import MyOrders from './components/MyOrders';
+import OrderDetail from "./components/OrderDetail";
 
 function ProtectedRoute({ children }) {
   const isAuthenticated = localStorage.getItem('user');
@@ -23,13 +24,9 @@ function App() {
     <>
       <Header />
       <Routes>
-        {/* Public Route */}
         <Route path="/login" element={<Login />} />
 
-        {/* Protected Routes */}
-        <Route
-          path="/"
-          element={
+        <Route path="/" element={
             <ProtectedRoute>
               <Home />
             </ProtectedRoute>
@@ -84,6 +81,14 @@ function App() {
           }
         />
         <Route
+          path="/order/:orderId"
+          element={
+            <ProtectedRoute>
+              <OrderDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/about"
           element={
             <ProtectedRoute>
@@ -99,11 +104,9 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* Fallback Route */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

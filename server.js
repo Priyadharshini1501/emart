@@ -4,20 +4,16 @@ const cors = require("cors");
 const app = express();
 const PORT = 4000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Dummy credentials (Replace with real database credentials)
 const USERS = {
   testUser: "password123",
 };
 
-// Login Endpoint
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
-  // Basic validation
   if (USERS[username] && USERS[username] === password) {
     return res.json({ token: "dummy-token" });
   } else {

@@ -1,18 +1,17 @@
-// src/components/MyOrders.js
 import React, { useState, useEffect } from "react";
-import { getOrders } from "../services/cartService";  // Import the service to fetch orders
-import { useNavigate } from "react-router-dom";  // For navigating to order details
+import { getOrders } from "../services/cartService"; 
+// import { useNavigate } from "react-router-dom";
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const orderData = await getOrders();
-        setOrders(orderData);  // Set fetched orders
+        setOrders(orderData); 
         setLoading(false);
       } catch (error) {
         console.error("Failed to fetch orders:", error);
@@ -46,12 +45,13 @@ const MyOrders = () => {
                   Status: {order.orderState}
                 </p>
               </div>
-              <button
-                onClick={() => navigate(`/order-details/${order.id}`)}
+              <a
+                href={`/order/${order.id}`}
                 className="btn btn-outline-primary"
               >
                 View Details
-              </button>
+              </a>
+              {/* <Link to={`/order/${order.id}`}>View Order {order.orderNumber}</Link> */}
             </div>
           </li>
         ))}

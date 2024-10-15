@@ -1,13 +1,10 @@
-// src/components/Cart.js
 import React, { useEffect, useState } from "react";
 import { getCart } from "../services/cartService";
 import { NavLink } from 'react-router-dom'
 
 const Cart = () => {
-  // State to store cart items and cart details
   const [cart, setCart] = useState(null);
   const cartId = localStorage.getItem('cartId');
-  // Fetch the cart details when the component mounts
   useEffect(() => {
     const fetchCart = async () => {
         try {
@@ -25,17 +22,13 @@ const Cart = () => {
       // eslint-disable-next-line
   }, []);
 
-  // Render a loading message while the cart is being fetched
   if (!cart) {
     return <div>Loading Cart...</div>;
   }
 
-  // If cart has no line items, display a message indicating that
   if (cart.lineItems.length === 0) {
     return <div>Your cart is empty!</div>;
   }
-
-  // Helper function to calculate the total amount
   const calculateTotal = () => {
     return cart.lineItems.reduce((acc, item) => {
       return acc + item.totalPrice.centAmount / 100;

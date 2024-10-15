@@ -1,4 +1,3 @@
-// src/components/OrderConfirmation.js
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 
@@ -7,18 +6,15 @@ const OrderConfirmation = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Extract order data from the navigation state if available
   useEffect(() => {
     const orderData = location.state?.order;
     if (orderData) {
       setOrder(orderData);
     } else {
-      // If no order data is available, navigate back to home
       navigate("/");
     }
   }, [location, navigate]);
 
-  // Return a loader if order data is not yet set
   if (!order) {
     return <div>Loading order details...</div>;
   }
@@ -32,7 +28,6 @@ const OrderConfirmation = () => {
           Your order has been placed successfully. Below are your order details:
         </p>
         <hr />
-        {/* Order Summary */}
         <div className="mb-3">
           <h5>Order Number: {order.orderNumber}</h5>
         </div>
@@ -68,7 +63,6 @@ const OrderConfirmation = () => {
             Phone: {order.shippingAddress.phone}
           </p>
         </div>
-        {/* Back to Home or Shop Again Button */}
         <button className="btn btn-primary" onClick={() => navigate("/")}>
           Back to Home
         </button>
